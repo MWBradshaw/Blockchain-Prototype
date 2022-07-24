@@ -22,8 +22,6 @@ Blockchain.prototype.createNewBlock = function(nonce, previousBlockHash, hash) {
     return newBlock;
 }
 
-module.exports = Blockchain;
-
 Blockchain.prototype.getLastBlack = function() {
     return this.chain[this.chain.length - 1];
 }
@@ -45,3 +43,19 @@ Blockchain.prototype.hashBlock = function(previousBlockHash, currentBlockData, n
     const hash = sha256(dataAsString);
     return hash;
 }
+
+
+Blockchain.prototype.proofOfWork = function(previousBlockHash, currentBlockData) {
+    let nonce = 0;
+    let hash  = this.hashBlock(previousBlockHash, currentBlockData, nonce);
+    
+    while(hash.substring(0, 4) !== '0000') {
+        nonce++;
+        hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
+    }
+
+    return nonce;
+}
+
+
+module.exports = Blockchain;
